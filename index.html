@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我爱你粒子特效 ❤️</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+      color: white;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const texts = [
+      "我爱你", "俺愛你", "사랑해", "사랑해요", "愛してる", "好きだよ",
+      "I love you", "Je t'aime", "Ich liebe dich", "Te amo", "Ti amo",
+      "Eu te amo", "Miluji tě", "Kocham cię", "Mina rakastan sinua",
+      "Volim te", "Jeg elsker deg", "Ik hou van je", "Ani ohev otach",
+      "Szeretlek", "Te iubesc", "Ich hab dich lieb",
+      "Aku cinta padamu", "Chan rak khun", "Em yêu anh", "Anh yêu em",
+      "أنا أحبك", "मैं तुमसे प्यार करता हूं", "ہم تم سے پیار کرتے ہیں",
+      "Nakupenda", "Te quiero", "Yo te amo", "Amor mio", "Mi amor"
+    ];
+
+    const particles = [];
+    const stars = [];
+
+    // 初始化星星
+    for (let i = 0; i < 60; i++) {
+      stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 1.2
+      });
+    }
+
+    // 粒子对象
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.6;
+        this.vy = (Math.random() - 0.5) * 0.6;
+        this.text = texts[Math.floor(Math.random() * texts.length)];
+        this.size = Math.random() * 15 + 15;
+        this.color = "rgb(255,0,0)";
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < -50) this.x = width + 50;
+        if (this.x > width + 50) this.x = -50;
+        if (this.y < -30) this.y = height + 30;
+        if (this.y > height + 30) this.y = -30;
+      }
+
+      draw(ctx) {
+        ctx.font = `${this.size}px sans-serif`;
+        ctx.fillStyle = this.color;
+        ctx.fillText(this.text, this.x, this.y);
+      }
+    }
+
+    for (let i = 0; i < 80; i++) {
+      particles.push(new Particle());
+    }
+
+    function drawStars() {
+      ctx.fillStyle = "white";
+      stars.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(0,0,0,0.3)";
+      ctx.fillRect(0, 0, width, height);
+      drawStars();
+      particles.forEach(p => {
+        p.update();
+        p.draw(ctx);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+  </script>
+</body>
+</html>
